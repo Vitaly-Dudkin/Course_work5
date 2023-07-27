@@ -44,7 +44,6 @@ class DBManager:
         with self.conn.cursor() as cursor:
             for vacancy in vacancies:
                 self.create_table(vacancy['employer'].lower())
-                # print(vacancy)
                 cursor.execute(
                     f'insert into {vacancy["employer"].lower()}(description, employer, experience, salary, url) values(%s,%s,%s,%s,%s)',
                     (vacancy['description'], vacancy['employer'], vacancy['experience'],
@@ -59,7 +58,6 @@ class DBManager:
         """
         with self.conn.cursor() as cursor:
             cursor.execute("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname='public'")
-            # print(cursor.fetchall())
             for company in cursor.fetchall():
                 cursor.execute(f'SELECT count(*) FROM {company[0]}')
                 print(f'Company: {company[0].capitalize()} Vacancies: {cursor.fetchall()[0][0]}')
@@ -71,10 +69,8 @@ class DBManager:
         """
         with self.conn.cursor() as cursor:
             cursor.execute("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname='public'")
-            # print(cursor.fetchall())
             for company in cursor.fetchall():
                 cursor.execute(f'SELECT * FROM {company[0]}')
-                # print(cursor.fetchall())
                 self.get_vacancies(cursor.fetchall())
 
     def get_vacancies(self, vacancy: list):
@@ -94,10 +90,8 @@ class DBManager:
             total = 0
             count = 0
             cursor.execute("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname='public'")
-            # print(cursor.fetchall())
             for company in cursor.fetchall():
                 cursor.execute(f'SELECT salary, description FROM {company[0]}')
-                # print(cursor.fetchall())
                 for i in cursor.fetchall():
                     if i[0] != 'Null':
                         total += float(i[0])
@@ -115,10 +109,8 @@ class DBManager:
         salary = self.get_avg_salary()
         with self.conn.cursor() as cursor:
             cursor.execute("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname='public'")
-            # print(cursor.fetchall())
             for company in cursor.fetchall():
                 cursor.execute(f'SELECT description from {company[0]} where salary > {salary}')
-                # print(cursor.fetchall())
                 for i in cursor.fetchall():
                     if i[0] not in lst:
                         lst.append(i[0])
@@ -139,7 +131,3 @@ class DBManager:
                     if keyword in i[0] and i[0] not in lst:
                         lst.append(i[0])
         return '\n'.join(lst)
-
-
-test = DBManager()
-test.get_all_vacancies()

@@ -1,5 +1,4 @@
 import requests
-from pprint import pprint
 
 
 class Parser:
@@ -8,6 +7,7 @@ class Parser:
     from the hh.ru website based on specified
     keywords and company names.
     """
+
     def get_vacancies(self, name_companies: list[str], keywords: list[str]) -> list[dict]:
         words = '+'.join(keywords)
         lst = []
@@ -52,8 +52,3 @@ class Parser:
                 return salary['from']
         else:
             return 0
-
-
-test = Parser()
-
-pprint(test.get_vacancies(['Yandex'], []))
