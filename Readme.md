@@ -1,0 +1,1 @@
+The program allows you to find vacancies of specified companies on the hh.ru website and save them to the database.
