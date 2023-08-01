@@ -1,15 +1,7 @@
-"""
-Uploading following constants to the database access via venv variables
-"""
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
 # Database constants
-HOST = os.environ.get("HOST")[::]
-PORT = os.environ.get("PORT")[::]
-DATABASE = os.environ.get("DATABASE")[::]
-USER = os.environ.get("USER")[::]
-PASSWORD = os.environ.get("PASSWORD")[::]
+HOST = '127.0.0.1'
+PORT = 5432
+DATABASE = 'vacancy'
+USER = 'postgres'
+PASSWORD = 'qwerty'
 
