@@ -16,17 +16,24 @@ class DBManager:
         self.conn = psycopg2.connect(host=HOST,
                                      port=PORT,
                                      database=DATABASE,
-                                     user='postgres',
+                                     user=USER,
                                      password=PASSWORD)
+        self.create_table_employers()
 
-    def create_table(self, company):
+    def create_table_employers(self):
+        with self.conn.cursor() as cursor:
+            cursor.execute(f'create table if not exists employers('
+                           f'company_name varchar(200) PRIMARY KEY)')
+        self.conn.commit()
+
+    def create_table_vacancies(self, company):
         """
         create table for DATABASE vacancy if it doesn't exist
         :param company:
         """
         with self.conn.cursor() as cursor:
             cursor.execute("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname='public'")
-            lst = [i[0] for i in cursor.fetchall()]
+            lst = [i[0] for i in cursor.fetchall() if i != 'employers']
             if company not in lst:
                 cursor.execute(f'create table {company}(id serial PRIMARY KEY,'
                                f'description text,'
@@ -34,7 +41,12 @@ class DBManager:
                                f'experience varchar(30),'
                                f'salary int,'
                                f'url varchar(100))')
-        self.conn.commit()
+
+                cursor.execute(f"insert into employers (company_name) values ('{company}');")
+                cursor.execute(f'alter table {company} '
+                               f'add constraint fk_{company}_employer foreign key (employer) references employers(company_name);')
+
+            self.conn.commit()
 
     def save_vacancies(self, vacancies: list[dict]):
         """
@@ -43,13 +55,13 @@ class DBManager:
         """
         with self.conn.cursor() as cursor:
             for vacancy in vacancies:
-                self.create_table(vacancy['employer'].lower())
+                self.create_table_vacancies(vacancy['employer'].lower())
                 cursor.execute(
-                    f'insert into {vacancy["employer"].lower()}(description, employer, experience, salary, url) values(%s,%s,%s,%s,%s)',
-                    (vacancy['description'], vacancy['employer'], vacancy['experience'],
+                    f'insert into {vacancy["employer"].lower()}(description, '
+                    f'employer, experience, salary, url) values(%s,%s,%s,%s,%s)',
+                    (vacancy['description'], vacancy['employer'].lower(), vacancy['experience'],
                      vacancy['salary'], vacancy['url']))
         self.conn.commit()
-        self.conn.close()
 
     def get_companies_and_vacancies_count(self):
         """
@@ -131,3 +143,7 @@ class DBManager:
                     if keyword in i[0] and i[0] not in lst:
                         lst.append(i[0])
         return '\n'.join(lst)
+
+
+test = DBManager()
+# test.get_companies_and_vacancies_count()

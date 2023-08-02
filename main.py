@@ -4,13 +4,19 @@ from DBManager import DBManager
 
 def main():
     pass
+    #dbmanger.save_vacancies(parser.get_vacancies(
+     #   ['МТС', 'OZON', 'Билайн', 'ВКонтакте', 'Тинкофф', 'Yandex', 'Avito', 'Сбербанк', ],
+      #  []))
     # vacancies = parser.get_vacancies(['Yandex', 'Avito', 'Сбербанк'], ['python', 'SQL'])
     # dbmanger.save_vacancies(vacancies)
     # dbmanger.get_companies_and_vacancies_count()
     dbmanger.save_vacancies(parser.get_vacancies(
-        ['МТС'],
+        ['МТС','OZON', 'Билайн', 'ВКонтакте', 'Тинкофф', 'Yandex', 'Avito', 'Сбербанк',],
         []))
-    # 'OZON', 'Билайн', 'ВКонтакте', 'Тинкофф', 'Yandex', 'Avito', 'Сбербанк',], ['']))
+    # dbmanger.save_vacancies(parser.get_vacancies(
+    #     ['МТС'],
+    #     []))
+
     # print(parser.get_vacancies(['Мегафон'],[]))
     # print(dbmanger.get_vacancies_with_keyword('Менеджер'))
 

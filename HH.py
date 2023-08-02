@@ -27,6 +27,7 @@ class Parser:
             response = requests.get(url).json()
             for id_company in response['items']:
                 employer_id.append({'company': name, 'id': id_company['id']})
+
         return employer_id
 
     def parse_vacancies(self, vacancy: dict, company: str) -> dict:
