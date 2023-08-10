@@ -53,3 +53,6 @@ class Parser:
                 return salary['from']
         else:
             return 0
+
+test = Parser()
+print(test.get_vacancies(['ozon'], []))

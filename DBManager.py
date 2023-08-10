@@ -16,7 +16,7 @@ class DBManager:
         self.conn = psycopg2.connect(host=HOST,
                                      port=PORT,
                                      database=DATABASE,
-                                     user=USER,
+                                     user=USE,
                                      password=PASSWORD)
 
     def save_vacancies(self, vacancies: list[dict]):
@@ -51,10 +51,9 @@ class DBManager:
         for each company.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute("SELECT company_name FROM employers")
-            for company in cursor.fetchall():
-                cursor.execute("SELECT COUNT(*) FROM vacancies WHERE employer=%s", company)
-                print(f"Company: {company[0]}. Number of vacancies: {cursor.fetchall()[0][0]} ")
+            cursor.execute("SELECT count(id), employer FROM vacancies group by employer order by 1 desc")
+            for i, v in cursor.fetchall():
+                print(f'Amount_of_vacancies: {i}, Name_company: {v}')
 
     def get_all_vacancies(self):
         """
@@ -72,9 +71,9 @@ class DBManager:
         :return: average salary for vacancies.
         """
         with self.conn.cursor() as cursor:
-            cursor.execute("SELECT salary FROM vacancies")
+            cursor.execute("SELECT round(avg(salary)) FROM vacancies")
             salaries = cursor.fetchall()
-            return round(sum(map(sum, salaries)) / len(salaries))
+            return int(salaries[0][0])
 
     def get_vacancies_with_higher_salary(self):
         """
@@ -106,3 +105,6 @@ class DBManager:
               f"Salary {salary if salary else 'No info'}\n"
               f"URL {url}")
 
+
+# test = DBManager()
+# print(test.get_companies_and_vacancies_count())

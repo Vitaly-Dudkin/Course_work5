@@ -1,7 +1,10 @@
-# Database constants
-HOST = '127.0.0.1'
-PORT = 5432
-DATABASE = 'vacancy'
-USER = 'postgres'
-PASSWORD = 'qwerty'
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+HOST = os.environ.get("HOST")[::]
+PORT = os.environ.get("PORT")[::]
+DATABASE = os.environ.get("DATABASE")[::]
+USE = os.environ.get("USE")[::]
+PASSWORD = os.environ.get("PASSWORD")[::]
